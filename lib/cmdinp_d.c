@@ -14,6 +14,7 @@ static int outs_xyfix(const char * const str, unsigned *ox, unsigned *oy)
 	unsigned len = strlen(str);
 	int feed = 0;
 	
+	(void)ox;
 	outs(str);
 	where_c += len;
 	if (where_c >= max_c) {
