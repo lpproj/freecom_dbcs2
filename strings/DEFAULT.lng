@@ -5,7 +5,12 @@
 #	Language: English
 #	Codepage: ASCII (7bit) / any codepage
 #	Author:   FreeCOM maintainer
-# 
+# Changelog by W. Spiegl (2024-12-21).
+# TEXT_CMDHELP_IF: added /I string==STRING
+# TEXT_CMDHELP_ECHO: added ECHO.
+# TEXT_CMDHELP_SHIFT: fixed (%0) to be (%%0).
+# Changelog by W. Spiegl (2024-10-15):
+# "FOR - Example: replaced %% by %%%%"
 # This file is used to generate all the messages that command.com
 # outputs.  This file is the input to the fixstrs program, and it
 # outputs strings.h and strings.dat.  The .DAT file is appended to
@@ -804,7 +809,7 @@ Bypassing '%s'.
 .
 
 :TEXT_MSG_VER_DOS_VERSION#0%
-DOS version %u.%u
+DOS version %u.%02u
 .
 
 :TEXT_MSG_VER_EARLY_FREEDOS
@@ -1080,7 +1085,7 @@ ERASE [drive:][path]filename [/P] [/V]
 Displays a list of files and subdirectories in a directory.
 
 DIR [drive:][path][filename] [/P] [/W] [/A[[:]attributes]]
-  [/O[[:]sortorder]] [/S] [/B] [/L] [/V]
+  [/O[[:]sortorder]] [/S] [/B] [/L]
 
   [drive:][path][filename]
             Specifies drive, directory, and/or files to list.
@@ -1151,7 +1156,9 @@ Displays messages, or turns command-echoing on or off.
 
   ECHO [ON | OFF]
   ECHO [message]
+  ECHO.
 
+ECHO. displays an empty line (only in batch files)
 Type ECHO without parameters to display the current echo setting.
 .
 
@@ -1176,7 +1183,7 @@ To use the FOR command in a batch program, specify %%%%variable instead of
 %%variable.
 
 For example:
-  FOR %%f IN (---start--- a*.* ---end---) DO ECHO - %%f -
+  FOR %%%%f IN (---start--- a*.* ---end---) DO ECHO - %%%%f -
 .
 
 :TEXT_CMDHELP_GOTO
@@ -1205,18 +1212,20 @@ Performs conditional processing in batch programs.
 IF [NOT] ERRORLEVEL number command
 IF [NOT] string1==string2 command
 IF [NOT] EXIST filename command
+IF /I string==STRING
 
-  NOT               Specifies that the command shell should carry out the
-                    command only if the condition is false.
-  ERRORLEVEL number Specifies a true condition if the last program run
-                    returned an exit code equal to or greater than the
-                    number specified.
-  command           Specifies the command to carry out if the condition is
-                    met.
-  string1==string2  Specifies a true condition if the specified text
-                    strings match.
-  EXIST filename    Specifies a true condition if the specified filename
-                    exists.
+  NOT                Specifies that the command shell should carry out
+                     the command only if the condition is false.
+  ERRORLEVEL number  Specifies a true condition if the last program run
+                     returned an exit code equal to or greater than the
+                     number specified.
+  command            Specifies the command to carry out if the condition
+                     is met.
+  string1==string2   Specifies a true condition if the specified text
+                     strings match.
+  EXIST filename     Specifies a true condition if the specified filename
+                     exists.
+  /I string==STRING  Ignores uppercase / lowercase
 .
 
 :TEXT_CMDHELP_LFNFOR
@@ -1387,7 +1396,7 @@ Changes the position of replaceable parameters in a batch file.
 
 SHIFT [DOWN]
 
-DOWN shifts the argument window toward the beginning (%0); otherwise
+DOWN shifts the argument window toward the beginning (%%0); otherwise
 toward the end.
 .
 

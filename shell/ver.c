@@ -51,7 +51,8 @@
 # define MACHINE ""
 #endif
 
-const char shellver[] = "0.85b"
+#include "../version.h"
+const char shellver[] = FREECOM_VERSION 
 #if defined(DBCS)
 	"_DBCS"
 #endif
@@ -148,27 +149,45 @@ int cmd_ver (char * rest) {
   /* arguments are simply ignored */
 
   if(optR) {                         /* version information */
+        unsigned int major, minor;
         IREGS regs;
+        regs.r_ax = 0x3306;
+        regs.r_bx = 0;
+        intrpt(0x21, &regs);
+        major = regs.r_bx & 255;
+        minor = regs.r_bx >> 8;
         regs.r_ax = 0x3000;
         intrpt(0x21, &regs);
-        displayString(TEXT_MSG_VER_DOS_VERSION, regs.r_ax & 0xFF, regs.r_ax >> 8);
+        if (major == 0) {
+          major = regs.r_ax & 255;
+          minor = regs.r_ax >> 8;
+        }
+        displayString(TEXT_MSG_VER_DOS_VERSION, major, minor);
 
-        if ((regs.r_bx >> 8) == 0xfd)
+        if ((regs.r_bx >> 8) == 0xfd && (regs.r_bx & 0xFF) == 0xff)
         {
-          if ((regs.r_bx & 0xFF) == 0xff)
-          {
-          	displayString(TEXT_MSG_VER_EARLY_FREEDOS);
-          }
-          else
-          {
-/*            displayString(TEXT_MSG_VER_LATER_FREEDOS
-             , regs.r_cx >> 8, regs.r_cx & 0xFF, regs.r_bx & 0xFF);
-             , 2, 0, regs.r_bx & 0xFF ); */
-             regs.r_ax = 0x33FF;
-             intrpt( 0x21, &regs );
-             printf( "%Fs", MK_FP( regs.r_dx, regs.r_ax ) );
-             /* "%Fs" may only work in Turbo C's printf */
-          }
+          displayString(TEXT_MSG_VER_EARLY_FREEDOS);
+        }
+        else
+        {
+           unsigned char far * pstart;
+           unsigned char far * pend;
+/*         displayString(TEXT_MSG_VER_LATER_FREEDOS
+           , regs.r_cx >> 8, regs.r_cx & 0xFF, regs.r_bx & 0xFF);
+           , 2, 0, regs.r_bx & 0xFF ); */
+           regs.r_ax = 0x33FF;
+           regs.r_dx = 0;
+           intrpt( 0x21, &regs );
+           if (regs.r_dx) {
+             pstart = MK_FP( regs.r_dx, regs.r_ax );
+             for (pend = pstart; *pend; ++ pend) /* empty loop body */;
+             while (pend > pstart &&
+               (pend[-1] == ' ' || pend[-1] == 9
+                 || pend[-1] == 10 || pend[-1] == 13)) {
+               -- pend;
+             }
+             printf( "%.*Fs\n", pend - pstart, pstart);
+           }
         }
       }
       if (optW)

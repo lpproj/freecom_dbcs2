@@ -781,7 +781,7 @@ Obchodzenie '%s'.
 .
 
 :TEXT_MSG_VER_DOS_VERSION#0%
-Wersja DOS: %u.%u
+Wersja DOS: %u.%02u
 .
 
 :TEXT_MSG_VER_EARLY_FREEDOS
@@ -1344,7 +1344,7 @@ Zmienia pozycje parametr¢w w pliku wsadowym.
 
 SHIFT [DOWN]
 
-DOWN przesuwa wartožci w kierunku pocz†tku (%0); w przeciwnym wypadku
+DOWN przesuwa wartožci w kierunku pocz†tku (%%0); w przeciwnym wypadku
 w kierunku ko¤ca.
 .
 

@@ -719,7 +719,7 @@ Ignorando '%s'.
 .
 
 :TEXT_MSG_VER_DOS_VERSION#0%
-DOS versão %u.%u
+DOS versão %u.%02u
 .
 
 :TEXT_MSG_VER_EARLY_FREEDOS
@@ -1278,7 +1278,7 @@ Altera a posição dos parâmetros numéricos num batch.
 
 SHIFT [DOWN]
 
-Caso se use DOWN, os parâmetros serão em direcção ao primeiro (%0),
+Caso se use DOWN, os parâmetros serão em direcção ao primeiro (%%0),
 caso contrário em direcção ao último (%9).
 .
 

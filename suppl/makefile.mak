@@ -1,6 +1,6 @@
-CFG_DEPENDENCIES = suppl.mak
+CFG_DEPENDENCIES = makefile.mak
 
-TOP=..
+TOP = ..
 !include "$(TOP)/config.mak"
 
 all : src/$(CFG)

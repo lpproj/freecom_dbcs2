@@ -16,7 +16,7 @@
 
 static int optRecursiveMode, optQuiet;
 
-//#define COMMAND_EXTENSIONS
+#define COMMAND_EXTENSIONS
 #ifdef COMMAND_EXTENSIONS
 optScanFct(opt_md_rd)
 {
@@ -35,7 +35,7 @@ optScanFct(opt_md_rd)
 #define SCANNER_FCT 0
 #endif
 
-int mk_rd_dir(char *param, int (*func) (const char *, int optRecursiveMode, int optQuiet), char *fctname)
+int mk_rd_dir(char *param, int (*func) (const char *, int recursiveMode, int quiet), char *fctname)
 {	char **argv;
 	int argc, opts;
 	int rv;

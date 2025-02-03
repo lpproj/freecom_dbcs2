@@ -5,15 +5,17 @@ INCLUDEPATH = -I$(CC_BASE_PATH)\INCLUDE
 CC = $(BINPATH)\TCC		# Turbo C/C++
 CL = $(CC)
 AR = $(BINPATH)\Tlib /C
-LD = $(BINPATH)\Tlink /m/s/l /c/d
-LIBLIST = ,
-ECHOLIB = echolib
+LD_RSP = command.rsp
+LD = $(BINPATH)\Tlink /m/s/l /c/d @$(LD_RSP)
 
 OBJC0 = $(LIBPATH)\c0$(SHELL_MMODEL).obj
 LIBC = $(LIBPATH)\c$(SHELL_MMODEL).lib
 
+FIXSTRSOPT = --lib2
+
 CFG = TURBOC.CFG
-CFLAGS1 = -1- -a- -f- -ff- -K -w+ -O -Z -L$(LIBPATH)
+CFLAGS1 = -1- -a- -f- -ff- -K -w+ -O -Z
+CFLAGS2 = -L$(LIBPATH)
 
 #		*Implicit Rules*
 .c.exe:

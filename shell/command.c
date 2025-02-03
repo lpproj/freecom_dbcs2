@@ -208,7 +208,7 @@ void execute(char *first, char *rest, int lh_lf)
   assert(extension);
 
   /* loadhigh/loadfix don't do batch files */
-  if(!lh_lf && stricmp(extension, ".bat") == 0) {
+  if(!lh_lf && ((stricmp(extension, ".bat") == 0) || (stricmp(extension, ".cmd") == 0))) {
     dprintf(("[BATCH: %s %s]\n", fullname, rest));
     batch(fullname, first, rest);
   } else if(stricmp(extension, ".exe") == 0
@@ -219,9 +219,15 @@ void execute(char *first, char *rest, int lh_lf)
     dprintf(("[EXEC: %s %s]\n", fullname, rest));
 
 	if(strlen(rest) > MAX_EXTERNAL_COMMAND_SIZE) {
-        char *fullcommandline = malloc( strlen( first ) + strlen( rest ) + 2 );
+        char *fullcommandline = malloc( strlen( first ) + strlen( rest ) + 3 );
         if( fullcommandline == NULL ) return;
-        sprintf( fullcommandline, "%s%s", first, rest );
+        if ( strchr( first, ' ' ) ) {
+          sprintf( fullcommandline, "\"%s\"%s", first, rest );
+
+        }
+        else {
+          sprintf( fullcommandline, "%s%s", first, rest );
+        }
         if( chgEnv( LONG_CMDLINE_ENV_NAME, fullcommandline ) != 0 ) {
             free( fullcommandline );
             return;
@@ -702,8 +708,10 @@ int expandEnvVars(char *ip, char * const line)
 			  *tp = '\0';
 
 			  if((evar = getEnv(ip)) != 0) {
-				if(cp >= parsedMax(strlen(evar)))
-				  return 0;
+				if(cp >= parsedMax(strlen(evar))) {
+                                        free(evar);
+                                        return 0;
+                                }
 				cp = stpcpy(cp, evar);
 				free(evar);
 			  } else if(matchtok(ip, "ERRORLEVEL")) {
@@ -714,8 +722,10 @@ int expandEnvVars(char *ip, char * const line)
 			  	if(0 == (evar = cwd(0))) {
 				    return 0;
 			  	} else {
-					if(cp >= parsedMax(strlen(evar)))
-					  return 0;
+					if(cp >= parsedMax(strlen(evar))) {
+                                                free(evar);
+                                                return 0;
+                                        }
 					cp = stpcpy(cp, evar);
 					free(evar);
 			  	}

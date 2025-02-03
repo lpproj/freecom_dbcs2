@@ -57,16 +57,16 @@ unsigned _fmemchr(unsigned const seg, unsigned ofs, const unsigned value, unsign
 }
 
 #else
-#if defined(_TC_EARLY_) || defined(__GNUC__)
+#if defined(_TC_EARLY_)
 #include <portable.h>
 #include "fmemory.h"
 
-void far *_fmemchr(const void far * s, int ch, unsigned length)
+char far *_fmemchr(const char far* const s, int ch, unsigned length)
 {	const byte far *p;
 
 	for(p = (const byte far*)s; length--; ++p)
 		if(*p == ch)
-			return (void far*)p;
+			return (char far*)p;
 
 	return 0;
 }

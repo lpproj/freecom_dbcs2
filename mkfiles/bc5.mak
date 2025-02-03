@@ -7,15 +7,17 @@ INCLUDEPATH = -I$(CC_BASE_PATH)\INCLUDE
 CC = $(BINPATH)\BCC		# Borland C++
 CL = $(CC)
 AR = $(BINPATH)\Tlib /C
-LD = $(BINPATH)\Tlink /m/s/l /c/d /i
-LIBLIST = ,
-ECHOLIB = echolib
+LD_RSP = command.rsp
+LD = $(BINPATH)\Tlink /m/s/l /c/d /i @$(LD_RSP)
 
 OBJC0 = $(LIBPATH)\c0$(SHELL_MMODEL).obj
 LIBC = $(LIBPATH)\c$(SHELL_MMODEL).lib
 
+FIXSTRSOPT = --lib1
+
 CFG = TURBOC.CFG
-CFLAGS1 = -1- -a -f- -ff- -K -w+ -O -Z -b- -v -L$(LIBPATH)
+CFLAGS1 = -1- -a -f- -ff- -K -w+ -O -Z
+CFLAGS2 = -b- -v -L$(LIBPATH)
 
 #		*Implicit Rules*
 .c.exe:

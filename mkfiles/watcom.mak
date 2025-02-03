@@ -1,53 +1,53 @@
-!ifdef __LINUX__
+!ifdef __UNIX__
 DIRSEP = /
 RMFILES = rm -f
-RMFILES2 = rm -f
 ECHOTO = echo >>
-ECHOTO0 = echo >>
+ECHOTODEP =
 CP = cp
 !endif
-
-!ifdef __NT__
-!ifdef %ProgramFiles(x86)
-!define Win64
-!endif
-!endif
-
-CC_BASE_PATH = $(WATCOM)
-!ifdef __LINUX__
-BINPATH = $(CC_BASE_PATH)/binl
-LD = $(CL) -l=dos -fe=command.exe $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) $(LIBS) -\"op map,statics,verbose,stack=4k\" $#
-!else
-!ifdef Win64
-BINPATH = $(CC_BASE_PATH)\BINNT
-!else
-BINPATH = $(CC_BASE_PATH)\BINW
-!endif
-LD = wlinker /ma/nologo
-!endif
-LIBPATH = $(CC_BASE_PATH)$(DIRSEP)lib
-INCLUDEPATH = -I$(CC_BASE_PATH)$(DIRSEP)h
-CC = $(BINPATH)$(DIRSEP)wcc -zq -Fr -fo=.obj
-CL = $(BINPATH)$(DIRSEP)wcl -zq -fo=.obj -bcl=dos
-AR = $(BINPATH)$(DIRSEP)wlib -n -c -l
-LIBLIST = $#
+LIBLIST = >
 ECHOLIB = echo >>
+ECHOLIBDEP =
+
+!ifdef __UNIX__
+LD = $(CL) -l=dos -fe=command.exe $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) $(LIBS) -\"op map,statics,verbose,stack=4k\"
+!else
+LD_RSP = command.rsp
+LD = wlinker /ma/nologo @$(LD_RSP)
+!endif
+INCLUDEPATH = -I$(WATCOM)$(DIRSEP)h
+CC = wcc -zq -fo=.obj
+CL = wcl -zq -fo=.obj -bcl=dos
+CL386 = wcl386 -zq -fo=.obj
+AR = wlib -n -c
 
 CFG = watcomc.cfg
 CFLAGS1 = -os-s-wx
 
 #		*Implicit Rules*
-!ifdef __LINUX__
-.SUFFIXES:
-.SUFFIXES: .c .asm .com .exe .obj
+!ifeq UTILS_BUILD 1
 .c.exe:
-  gcc -x c -D__GETOPT_H $(__DBCS) -I../suppl $< -o $@
-!else ifdef Win64
-.c.exe
-  $(BINPATH)\owcc $(__DBCS) -I../suppl $< -o $@
+! ifdef __LINUX__
+  $(CL386) -I$(WATCOM)$(DIRSEP)lh $(__DBCS) $< -fm -fe=$@ -I..$(DIRSEP)suppl
+! else ifdef __MSDOS__
+!  ifeq COMPACT_MODEL 1
+  $(CL) -mc -I$(WATCOM)$(DIRSEP)h $(__DBCS) $< -fm -fe=$@ -I..$(DIRSEP)suppl
+!  else
+  $(CL) -ms -I$(WATCOM)$(DIRSEP)h $(__DBCS) $< -fm -fe=$@ -I..$(DIRSEP)suppl
+!  endif
+! else ifdef __OSX__
+  clang -x c -Og -g -Wall -Wno-pragma-pack -DGCC -D__GETOPT_H $(__DBCS) -I../suppl $< -o $@
+! else
+  $(CL386) -I$(WATCOM)$(DIRSEP)h $(__DBCS) $< -fm -fe=$@ -I..$(DIRSEP)suppl
+! endif
 !else
-.obj.exe:
-  $(BINPATH)\wlink sys DOS f $< lib $(SUPPL_LIB_PATH)\SUPPL_$(SHELL_MMODEL).LIB op q
-!endif
 .c.obj:
   $(CC) $< -bt=dos @$(CFG)
+
+.obj.exe:
+  wlink sys DOS f $< lib $(SUPPL_LIB_PATH)$(DIRSEP)suppl_$(SHELL_MMODEL).lib op q,map
+
+.c.exe:
+  $(CL) $< @$(CFG) -\"op map,statics,verbose,stack=4k\"
+
+!endif

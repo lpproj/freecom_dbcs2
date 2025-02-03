@@ -18,11 +18,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Package install
-      run: |
-        sudo add-apt-repository ppa:tkchia/build-ia16
-        sudo apt update
-        sudo apt install gcc-ia16-elf nasm upx
+    - name: prerequisites
+      run: ./ci_prereq.sh
+      env:
+          TC201_ARCHIVE_PATHNAME: ${{ vars.TC201_ARCHIVE_PATHNAME }}
+          TC201_ARCHIVE_FILENAME: ${{ vars.TC201_ARCHIVE_FILENAME }}
+          TC201_ARCHIVE_PASSPHRASE: ${{ secrets.TC201_ARCHIVE_PASSPHRASE }}
 
     - name: build
       run: ./ci_build.sh
@@ -46,3 +47,49 @@ jobs:
       with:
         name: ${{ steps.snapshotname.outputs.fname }}
         path: _output
+
+  test-ow-cross-compile:
+    if: contains(github.event.head_commit.message, '[skip ci]') == false
+    strategy:
+      matrix:
+        ow:
+          - name:   '1.9'
+            id:     '1.9'
+          - name:   '2.0'
+            id:     '2.0-64'
+        host:
+          - name:   'Windows'
+            id:     'nt'
+            image:  'windows-latest'
+            cmd:    'build.bat watcom upx english'
+          - name:   'Mac OSX-ARM'
+            id:     'osx'
+            image:  'macos-latest'
+            cmd:    './build.sh watcom upx english'
+          - name:   'Linux'
+            id:     'linux'
+            image:  'ubuntu-latest'
+            cmd:    './build.sh watcom upx english'
+        exclude:
+          - { ow: { name: '1.9' }, host: { id: 'osx' } }
+    runs-on: ${{matrix.host.image}}
+    name: Test OW ${{matrix.ow.name}} cross-compile (${{matrix.host.name}})
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Nasm install
+      uses: ilammy/setup-nasm@v1
+
+    - name: UPX install
+      uses: "./.github/actions/upx-inst"
+
+    - name: Open Watcom install
+      uses: open-watcom/setup-watcom@v0
+      with:
+        version: ${{matrix.ow.id}}
+
+    - name: build
+      uses: "./.github/actions/build"
+      with:
+        cmd: ${{matrix.host.cmd}}

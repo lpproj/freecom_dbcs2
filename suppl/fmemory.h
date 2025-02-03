@@ -40,7 +40,7 @@
 #include <string.h>
 
 #else	/* !_TC_LATER_ */
-#if defined(_PAC_NOCLIB_) || defined(_TC_EARLY_) || defined(__GNUC__)
+#if defined(_PAC_NOCLIB_) || defined(_TC_EARLY_)
 
 #ifdef _PAC_NOCLIB_
 #include <stdlib.h>
@@ -54,15 +54,15 @@ void far *_fmemset(void far * const dst, int ch, unsigned length);
 
 unsigned _fstrlen(const char far * const s);
 char far *_fstrchr(const char far * const s, int ch);
-void far *_fmemchr(const void far * s, int ch, unsigned length);
+char far *_fmemchr(const char far * const s, int ch, unsigned length);
 void far *_fmemmove(void far * const dst, const void far * const src, unsigned length);
 int _fmemcmp(const void far * const dst, const void far * const src, unsigned length);
 int _fmemicmp(const void far * const dst, const void far * const src, unsigned length);
 int _fstrcmp(const char far * const dst, const char far * const src);
 int _fstricmp(const char far * const dst, const char far * const src);
-char far *_fstrcpy(char far * dst, const char far * src);
+void _fstrcpy(char far * const dst, const char far * const src);
 
-#endif /* defined(_PAC_NOCLIB_) || defined(_TC_EARLY_) || defined(__GNUC__) */
+#endif /* defined(_PAC_NOCLIB_) || defined(_TC_EARLY_) */
 #endif		/* _TC_LATER_ */
 
 #if defined(HI_TECH_C) || defined(_TC_EARLY_)

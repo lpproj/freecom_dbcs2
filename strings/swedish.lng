@@ -685,7 +685,7 @@ Hoppar över '%s'.
 .
 
 :TEXT_MSG_VER_DOS_VERSION
-DOS version %u.%u
+DOS version %u.%02u
 .
 
 :TEXT_MSG_VER_EARLY_FREEDOS
@@ -1233,7 +1233,7 @@ SET utan parametrar visar aktuella miljövariabler.
 
 SHIFT [DOWN]
 
-DOWN Flyttar parameter mot början (%0); annars mot slutet.
+DOWN Flyttar parameter mot början (%%0); annars mot slutet.
 .
 
 :TEXT_CMDHELP_TIME#1

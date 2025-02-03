@@ -766,7 +766,7 @@ Preskakanje preko '%s'
 .
 
 :TEXT_MSG_VER_DOS_VERSION
-DOS verzija %u.%u
+DOS verzija %u.%02u
 .
 
 :TEXT_MSG_VER_EARLY_FREEDOS
@@ -1274,7 +1274,7 @@ Menja poziciju zamenljivih parametara u batch fajlu.
 
   SHIFT [DOWN]
 
- DOWN pomera prozor argumenata prema početku (%0). U ostalim slučajevima
+ DOWN pomera prozor argumenata prema početku (%%0). U ostalim slučajevima
  pomera isti prema kraju.
 .
 

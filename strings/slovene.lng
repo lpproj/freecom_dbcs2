@@ -805,7 +805,7 @@ Preskakujem %s.
 .
 
 :TEXT_MSG_VER_DOS_VERSION#0%
-DOS verzija %u.%u
+DOS verzija %u.%02u
 .
 
 :TEXT_MSG_VER_EARLY_FREEDOS
@@ -1376,7 +1376,7 @@ Changes the position of replaceable parameters in a batch file.
 
 SHIFT [DOWN]
 
-DOWN shifts the argument window toward the beginning (%0); otherwise
+DOWN shifts the argument window toward the beginning (%%0); otherwise
 toward the end.
 .
 

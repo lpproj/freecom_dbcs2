@@ -7,25 +7,19 @@ goto end
 cd suppl
 call clnsuppl.bat
 cd ..
-call %0 command.com command.upx 
-call %0 .\ lastmake.mk context.h_c context.inc strings.h infores info.txt
-call %0 strings\ command.cln xmsswap.cln
-call %0 strings\ strings.h   strings.err strings.dat
-call %0 strings\ strings.lib strings.lst strings.log
-call %0 strings\strings\ strings.lib strings.lst strings.rsp makefile 
-call %0 criter\  criter criter1 context.def context.inc context.h_c
-call %0 cmd\     cmds.lib    cmds.lst    cmds.rsp    echolib.bat
-call %0 lib\     freecom.lib freecom.lst freecom.rsp echolib.bat
-call %0 shell\   command.exe command.map command.rsp echoto.bat
-call %0 tools\   tools.mak
+call %0 .\ command.com command.upx 
+call %0 .\ lastmake.mk context.h_c context.inc strings.h infores info.txt gnuconf.mak
+call %0 criter\ criter criter1 context.def context.inc context.h_c
+call %0 strings\ command.cln xmsswap.cln strings.h strings.err strings.dat strings.log
+call %0 strings\strings\ makefile strings.mak
+call %0 strings\strings\*. c
+call %0 tools\ makefile.mak
+call %0 tools\*. icd
 
-call %0 strings\*.     cfg obj o     exe
-call %0 strings\strings\*. c obj
-call %0 tools\*.   icd cfg obj o map exe com
-call %0 utils\*.       cfg obj o map exe
-
-for %%i in (cmd lib shell criter) do if exist %%i\*.obj del %%i\*.obj>nul
-for %%i in (cmd lib shell criter) do if exist %%i\*.cfg del %%i\*.cfg>nul
+for %%i in (cmd lib strings strings\strings) do call %0 %%i\*. lib lst
+for %%i in (cmd lib shell strings strings\strings tools utils utilsc) do call %0 %%i\*. obj o cfg map exe com rsp
+for %%i in (cmd lib shell strings strings\strings tools utils utilsc) do call %0 %%i\ echoto.bat echolib.bat gnumake.mak
+for %%i in (. criter) do call %0 %%i\ gnumake.mak
 
 :end
 
