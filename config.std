@@ -61,6 +61,7 @@ __TARGET = -DIBMPC
 
 !if $(DBCS)0 == 10
 __DBCS = -DDBCS -DJAPANESE
+!endif
 
 !if $(COMPACT_MODEL)0 == 10
 MMODEL = $(COMPACT_MMODEL)
