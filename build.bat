@@ -97,10 +97,15 @@ if not "%1" == "" goto loop_commandline
 ::goto run
 
 :run
-if not "%GENDOS%" == "1" goto run2
+if not "%GENDOS%" == "1" goto run1
 set NEC98=
 set IBMPC=
+set FMR=
 set NO_ENH_INP=1
+:run1
+if not "%NEC98%%IBMPC%%FMR%%GENDOS%x" == "x" goto run2
+echo ** Warning: No platform specified. Assume "ibmpc" is specified **
+set IBMPC=1
 :run2
 if not x%1==x set LNG=%1
 if "%lng%"=="" set LNG=english
