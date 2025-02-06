@@ -18,6 +18,8 @@ int isDbcsLead(unsigned char ch)
 			db += 2;
 		}
 	}
+#else
+	(void)ch;
 #endif
 	return 0;
 }
