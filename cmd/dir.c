@@ -296,6 +296,7 @@ static void printLFNname(char *shortName, char *ext)
     dprintf(("[LFN: path %s\n",pathbuffer)); 
 	
       /* LFN get canonical LFN */
+	r.r_flags = 1;	/* CY before 21.71 calls! */
 	r.r_ax = 0x7160;
 	r.r_cx = 0x8002;
 	r.r_si = FP_OFF( pathbuffer );
@@ -765,6 +766,7 @@ static int dir_print_free(unsigned long dirs)
   displayString(TEXT_DIR_FTR_DIRS, buffer);
 
   rootname[0] = toupper(*path);
+  r.r_flags = 1;	/* CY before 21.73 calls! */
   r.r_ax = 0x7303;
   r.r_ds = FP_SEG(rootname);
   r.r_dx = FP_OFF(rootname);
@@ -775,8 +777,10 @@ static int dir_print_free(unsigned long dirs)
 
   /* Note: RBIL carry clear and al==0 also means unimplemented 
      alternately carry set and ax==undefined (usually unchanged) for unimplemented
-  */  
-  if(!( r.r_flags & 1 ) && ( r.r_ax & 0xFF) ) {
+     ecm: RBIL is wrong, CF unchanged al=0 is the typical error return.
+     EDR-DOS returns NC ax=0 so checking for al!=0 here was wrong.
+  */
+  if(!( r.r_flags & 1 ) && ( r.r_ax != 0x7300 ) ) {
 	dprintf(("[DIR: Using FAT32 info]\n"));
 	clustersize = FAT32_Free_Space.sectors_per_cluster
 	 * FAT32_Free_Space.bytes_per_sector;
